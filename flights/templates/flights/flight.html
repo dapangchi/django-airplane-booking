@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% load static %}
+{% load is_active_nav %}
+{% block content %}
+
+
+<section class="gradient image intro first results user">
+    <div class="container">
+        <div class="details-content">
+            <h2>My bookings and requests</h2>
+            <div class="sidebar">
+                <div class="part">
+                    <h3>
+                        <span class="icon success">B</span>Booked flights
+                    </h3>
+                    <ul>
+                        {% for f in booked_requests %}
+                        <li class="{% is_active_nav f.id flight %}">
+                            <a href="/flights/requests/{{ f.id }}">
+                                <span class="title">Booking No. {{ f.id }}</span>
+                                {% for l in f.legs %}
+                                <span class="flight">{{ l.from_airport }} ({{ l.from_code }}) - {{ l.to_airport }} ({{ l.to_code }})</span>
+                                <span class="flight-detail">Departure: {{ l.date }} - {{ l.time }} hrs</span>
+                                {% endfor %}
+                            </a>
+                        </li>
+                        {% empty %}
+                          No bookings to display.
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="part">
+                    <h3>
+                        <span class="icon notice">R</span>Requests
+                    </h3>
+                    <ul>
+                        {% for f in flight_requests %}
+                        <li class="{% is_active_nav f.id flight %}">
+                            <a href="/flights/requests/{{ f.id }}">
+                                <!-- <span class="title">Flight request {{ f.id }}</span> -->
+                                <span class="title">Request for offer {{ f.id }}</span>
+                                {% for l in f.legs %}
+
+                                <span class="flight">{{ l.from_airport }} ({{ l.from_code }}) - {{ l.to_airport }} ({{ l.to_code }})</span>
+                                <span class="flight-detail">Departure: {{ l.date }} - {{ l.time }} hrs</span>
+                                {% endfor %}
+
+                             </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="main">
+                <!--
+                all offers for given flight: {{ flight.offers }}
+                pending offers (created by operator, not paid by the client): {{ flight.get_pending_offers }}
+                paid offers (paid by client, not confirmed by operator): {{ flight.get_paid_offers }}
+                confirmed offers (paid by client and confirmed by operator): {{ flight.get_confirmed_offers }}
+                -->
+                <!-- flight: {{ flight }}, booked_requests: {{ booked_requests }}, is_booked: {{ is_booked }} -->
+
+                {% if flight and not flight.offers %}
+                    <!-- <h3>You don't have any offers yet for this flight request</h3> -->
+                    <h3>One or more offers will be sent to you for this flight</h3>
+                {% endif %}
+
+                {% if flight and flight.offers %}
+                    {% if is_booked  %}
+
+                    {% else %}
+                    <h3>
+                        You have {{ flight.offers | length }} offer{{ flight.offers | length | pluralize }}
+                        for this flight
+                    </h3>
+                    {% endif %}
+
+                    {% if not flight_requests and not booked_requests %}
+                        You don't have any requests or booked flights yet.
+                    {% endif %}
+
+                    {% for offer in flight.offers %}
+
+                    {% if offer.status == "ACCEPTED" %}
+                    {% elif offer.status == "OFFER_CONFIRMED_BY_OPERATOR" %}
+                    <div class="status">
+                        <h4>Booking Confirmed</h4>
+                        <p>Your booking is confirmed. Please complete your booking with passenger details.</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="offer{% if offer.status == "OFFER_COMPLETED" %} booked{% endif %}">
+                        {% if offer.status == 'OFFER_UPDATED' %}
+                        <div class="update">
+                            <dl>
+                                <dt>Offer
+                                    <br>updated
+                                </dt>
+                                <dd>This offer was updated. This offer was updated. This offer was updated. This offer was updated. This offer was updated. </dd>
+                            </dl>
+                        </div>
+                        {% elif offer.status == 'OFFER_NOT_AVAILABLE' %}
+                        <div class="expired">
+                            <dl>
+                                <dt>No longer
+                                <br>available
+                                </dt>
+                                <dd>This offers is no longer available. This offers is no longer available. This offers is no longer available.</dd>
+                            </dl>
+                        </div>
+                        {% elif offer.status == 'ACCEPTED' %}
+                        <div class="waiting">
+                            <!-- <dl><dt>Pending confirmation</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum ipsum in magna ultricies bibendum.</dd><p>On the receipt of your booking confirmation, you can add passenger details.</p></dl> -->
+                            <h4>Pending confirmation</h4>
+                            <p>On the receipt of your booking confirmation, you can add passenger details.</p>
+                        </div>
+                        {% endif %}
+                        <div class="header">
+                            <h4>{{ offer.provider }}</h4>
+                            <!-- operator_id: {{ offer.operator_id }} -->
+                            {% if offer.status != "OFFER_COMPLETED" %}
+                            <div class="actions">
+                                <a href="#" class="btn switch show">Show details</a>
+                                <a href="#" class="btn switch">Hide details</a>
+                                <a href="/flights/invoice/{{ offer.trip_request_id }}" class="btn print" target="_blank">
+                                    <span class="icon icon-print"></span>
+                                </a>
+                            </div>
+                            {% elif offer.status == "OFFER_COMPLETED" %}
+                            <div class="print-option">
+                                <a href="/flights/invoice/{{ offer.trip_request_id }}" class="btn print" target="_blank">
+                                    <span class="icon icon-print"></span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            <input type="hidden" name="offerNo" value="{{ offer.trip_request_id }}">
+                        </div>
+                        <div class="body">
+                            <dl>
+                                <dt>Aircraft/Type:</dt>
+                                <dd>{{ offer.aircraft_type }} / {{ offer.aircraft_category }}</dd>
+                                <dt>Price:</dt>
+                                <dd>
+                                    <a href="#" class="webui-tooltip" data-target="tooltip-offer">
+                                        <strong>{{ offer.currency }} {{ offer.price }}</strong>
+                                    </a>
+                                    <span>Click on price for full details</span>
+                                </dd>
+                                <div id="tooltip-offer">
+                                    <div class="tooltip-offer">
+                                        <div class="tooltip-header">Price details
+                                            <a href="#" class="tooltip-close">Close
+                                                <span class="icon icon-delete"/>
+                                            </a>
+                                        </div>
+                                        <div class="tooltip-price clearfix">
+                                            <div class="row">
+                                                <div class="left">Flight price</div>
+                                                <div class="right">{{ offer.currency }} {{ offer.price }}</div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="left">Vat</div>
+                                                <!-- TODO: Add VAT -->
+                                                <div class="right">{{ offer.currency }} ?????</div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="left">
+                                                    <strong>Total price of offer</strong>
+                                                </div>
+                                                <!-- TODO: Add TOTAL -->
+                                                <div class="right">
+                                                    <strong>{{ offer.currency }} ??????</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tooltip-comments">
+                                            <!-- <div class="left">Operators comments</div> -->
+                                            <!-- <div class="right">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et doid est laborum.</div> -->
+                                            <div class="">{{ offer.operatorNotice }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if offer.status != "OFFER_COMPLETED" %}
+                                    <dt>Offer created:</dt>
+                                    <dd>
+                                        <p>{{ offer.created_date }}</p>
+                                    </dd>
+                                    {% if offer.availability_date %}
+                                        <dt>Offer valid until:</dt>
+                                        <dd>{{ offer.availability_date }}</dd>
+                                    {% endif %}
+                                {% endif %}
+
+                            </dl>
+                            <dl class="extra">
+                                <dt>Flight Times:</dt>
+                                <dd>
+                                {% for lo in offer.leg_offers %}
+                                    {{ lo.from_airport }} ({{ lo.from_code }}) - {{ lo.to_airport }} ({{ lo.to_code }}) -
+                                    {{ lo.flight_time_hrs }}h {{ lo.flight_time_min }}m
+                                    <br>
+                                {% endfor %}
+                                </dd>
+                                <dt>Passengers:</dt>
+                                <dd>
+                                    {{ offer.leg_offers.0.pax }}
+                                </dd>
+                                <dt>Baggage:</dt>
+                                <dd>{{ flight.baggage }}</dd>
+                                <dt>Additional Requests:</dt>
+                                <dd>{{ flight.additional_info }}</dd>
+                            </dl>
+                        </div>
+                        <div class="additional">
+                            <h5>Aircraft Details</h5>
+                            <dl>
+                                <dt>Tail Number:</dt>
+                                <dd>{{ offer.tail_number }}</dd>
+                                <dt>Year of construction:</dt>
+                                <dd>{{ offer.constructed }}</dd>
+                                <dt>Number of seats:</dt>
+                                <dd>{{ offer.seats }}</dd>
+                            </dl>
+                            <div class="galleries">
+                                <div class="switch">
+                                    <a href="#" class="icon icon-camera active" data-target=".mobile-gallery-container"></a>
+                                    <br>
+                                    <a href="#" class="icon icon-seats" data-target=".mobile-floorplan-container"></a>
+                                </div>
+                                <div class="images">
+                                    <div class="gallery mobile-gallery-container show">
+                                        <div class="slick">
+                                        {% for image in offer.image_ids %}
+                                            {% if image.type == 'AIRCRAFT_IMAGE'%}
+                                            <div>
+                                                <img src="http://ascentjet.com/rest/aircraft/images/{{ offer.aircraft_id }}/{{ image.id }}" />
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <!-- <div><img src="http://ascentjet.com/rest/aircraft/images/74/202" /></div> -->
+                                        </div>
+                                    </div>
+                                    <div class="gallery mobile-floorplan-container">
+                                        <div class="slick">
+                                        {% for image in offer.image_ids %}
+                                            {% if image.type == 'FLOOR_PLAN'%}
+                                            <div>
+                                                <img src="http://ascentjet.com/rest/aircraft/images/{{ offer.aircraft_id }}/{{ image.id }}" />
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <dl class="notice"><dt>Operators notice</dt><dd>{{ offer.operator_notice }}</dd></dl> -->
+                            {% if offer.operator_notice %}
+                            <dl>
+                                <dt>Operators notice</dt>
+                                <dd>{{ offer.operator_notice }}</dd>
+                            </dl>
+                            {% endif %}
+                        </div>
+                        {% if offer.status != "OFFER_COMPLETED" and offer.status != 'OFFER_NOT_AVAILABLE' %}
+                        <div class="footer">
+                            {% if offer.status == "OFFER_CONFIRMED_BY_OPERATOR" %}
+                                <a href="/flights/booking/#/passangers/{{ offer.id }}-{{ offer.trip_request_id }}" class="btn right">Add passanger information</a>
+                            {% elif offer.status == "ACCEPTED" %}
+                                <span class="btn right disabled">Add passanger information</span>
+                            {% else %}
+                            <div class="notes">
+                                <a href="#" class="popover important-notice" data-target="popover-content">
+                                    <span class="icon">i</span>
+                                    <strong>Important availability notice</strong>
+                                </a>
+                                <br>
+                                <div id="popover-content">
+                                    <div class="popover-close">
+                                        <a href="#">
+                                            <span>Close </span>
+                                            <span class="icon icon-close"></span>
+                                        </a>
+                                    </div>
+                                    <div class="popover-content">
+                                        Aircraft are available at the time an operator makes an offer.  Unless an operator commits to a specific date for validity of an offer, there is no guarantee tha the aircraft will be available at the time you make your booking. We would strongy suggest you make an early booking to ensure that your selected aircraft is still avaliable for your flight prior to making your payment.  You may also call an Ascent Jet representative on +41 22 366 42 05 who will be happy to contact the operator to to confirm availablity of your selected aircraft.
+                                        In the unlikely event that payment is made for an aircraft that is subsequently indicated as no longer available will be returned to you automatically.
+                                    </div>
+                                </div>
+                                <!-- <a href="#"><span class="icon">i</span><strong>Important availability notice</strong></a><br> -->
+                                <input id="offer-{{ offer.id }}" type="checkbox" name="agree" class="agree">
+                                <label for="offer-{{ offer.id }}">I have read and accept {{ offer.provider }}’s
+                                    <a href="#">
+                                        <strong>Terms and Conditions</strong>
+                                    </a>
+                                </label>
+                            </div>
+                            <!-- <form name="uppform" id="paymentForm-{{ flight.id }}" data-success-url="http://ascent-jet.revolucija.webfactional.com/flights/booking/#/paid/{{ offer.id }}" data-error-url="http://ascent-jet.revolucija.webfactional.com/flights/booking/#/error/{{ offer.id }}" data-merchant-id="{{ offer.merchant_id }}" data-amount="{{ offer.price_cents }}" data-currency="{{ offer.currency }}" data-refno="{{ offer.merchant_ref_no }}" data-sign="{{ offer.sign }}"><button class="btn payment-button" id="paymentButton" data-form="#paymentForm-{{ flight.id }}">Book this flight</button></form> -->
+                            <form name="uppform" id="paymentForm-{{ flight.id }}" data-success-url="http://localhost:8000/flights/booking/#/paid/{{ offer.id }}" data-error-url="http://localhost:8000/flights/booking/#/error/{{ offer.id }}" data-merchant-id="{{ offer.merchant_id }}" data-amount="{{ offer.price_cents }}" data-currency="{{ offer.currency }}" data-refno="{{ offer.merchant_ref_no }}" data-sign="{{ offer.sign }}">
+                                <button class="btn payment-button" id="paymentButton" data-form="#paymentForm-{{ flight.id }}">Book this flight</button>
+                            </form>
+                        {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    You request doesn't have any offers yet.
+
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="last-skew white"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

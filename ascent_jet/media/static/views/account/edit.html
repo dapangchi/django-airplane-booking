@@ -1,0 +1,79 @@
+
+<div class="last-skew white"></div>
+
+<div class="details-content">
+  <h2>My Account</h2>
+  <div class="sidebar">
+    <h3>Account information</h3>
+  </div>
+  <div class="main login">
+    <form name="updateAccount" class="account" ng-submit="update(updateAccount.$valid)" novalidate>
+      <p ng-show="saved" class="error indent">
+        Profile updated
+      </p>
+      <p ng-show="submitted && updateAccount.$invalid" class="alert alert-danger error-message indent">
+        Error message goes here
+      </p>
+      <p>
+        <label>Title</label>
+        <input type="radio" name="title" ng-model="account.customerInfo.title" value="Mr" id="title-1"><label for="title-1" class="stacked">Mr</label>
+        <input type="radio" name="title" ng-model="account.customerInfo.title" value="Mrs" id="title-2"><label for="title-2" class="stacked">Mrs</label>
+        <input type="radio" name="title" ng-model="account.customerInfo.title" value="Ms" id="title-3"><label for="title-3" class="stacked">Ms</label>
+      </p>
+      <p>
+        <label for="first-name">First name</label>
+        <input type="text" name="first_name" ng-model="account.customerInfo.firstName" placeholder="required" id="first-name" required />
+      </p>
+      <p>
+        <label for="last-name">Last name</label>
+        <input type="text" name="first_name" ng-model="account.customerInfo.lastName" placeholder="required" id="last-name" required />
+      </p>
+      <p>
+        <label for="company">Company</label>
+        <input type="text" name="company" ng-model="account.customerInfo.company" placeholder="optional" id="company" />
+      </p>
+      <p>
+        <label for="phone">Daytime phone</label>
+        <input type="text" name="phone" ng-model="account.customerInfo.dayTimePhone" placeholder="optional" id="phone" />
+      </p>
+      <p>
+        <label for="mobile">Mobile phone</label>
+        <input type="text" name="mobile" ng-model="account.customerInfo.alternatePhone" placeholder="optional" id="mobile" />
+      </p>
+      <p>
+        <label for="address1">Address 1</label>
+        <input type="text" name="address" ng-model="account.customerInfo.address" placeholder="required" id="address" required />
+      </p>
+      <p>
+        <label for="address2">Address 2</label>
+        <input type="text" name="address2" ng-model="account.customerInfo.address2" placeholder="optional" id="address2" />
+      </p>
+      <p>
+        <span class="city">
+          <label for="city">City</label>
+          <input type="text" name="city" ng-model="account.customerInfo.city" placeholder="required" id="city" required />
+        </span>
+        <span class="zip">
+          <label for="zip">Postal code</label>
+          <input type="text" name="zipCode" ng-model="account.customerInfo.zipCode" placeholder="required" id="zipCode" required />
+        </span>
+      </p>
+      <p class="dark">
+        <label for="country">Country</label>
+        <span class="selectize-style">
+          <ui-select ng-model="account.customerInfo.countryId" theme="selectize" required>
+            <ui-select-match placeholder="Choose country">[[ $select.selected.name ]]</ui-select-match>
+            <ui-select-choices repeat="item.id as item in countries | filter: $select.search" refresh="refreshCountries($select.countries)" refresh-delay="0">
+              [[ item.name ]]
+            </ui-select-choices>
+          </ui-select>
+        </span>
+      </p>
+      <p class="indent">
+        <input ng-click="submitted=true" type="submit" name="submit" value="Update profile" class="btn" />
+        <a href="/" class="btn empty">Cancel</a>
+      </p>
+    </form>
+  </div>
+  <div class="last-skew white"></div>
+</div>

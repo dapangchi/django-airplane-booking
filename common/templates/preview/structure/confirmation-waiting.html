@@ -1,0 +1,133 @@
+{% extends "preview/structure/base.html" %}
+{% block content %}
+
+<section class="gradient image intro first results user">
+  <div class="container">
+    <div class="details-content">
+      <h2>My bookings and requests</h2>
+      <div class="sidebar">
+        <div class="flights-list">
+          <div class="part">
+            <h3><span class="icon success">B</span>Booked flights</h3>
+            <ul>
+              <li>
+                <a href="#">
+                  <span class="title">Flight request 301</span>
+                  <span class="flight">Zagreb (LECU) - Geneva (LPPT) </span>
+                  <span class="flight"></span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="title">Flight request 301</span>
+                  <span class="flight">LIsbon (LECU) - Madrid (LPPT)</span>
+                  <span class="flight">Madrid (LPPT) - Lisbon (LECU) </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="part">
+            <h3><span class="icon notice">R</span>Requests</h3>
+            <ul>
+              <li class="active">
+                <a href="#">
+                  <span class="title">Flight request 301</span>
+                  <span class="flight">LIsbon (LECU) - Madrid (LPPT)</span>
+                  <span class="flight">Madrid (LPPT) - Lisbon (LECU) </span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="title">Flight request 301</span>
+                  <span class="flight">LIsbon (LECU) - Madrid (LPPT)</span>
+                  <span class="flight">Madrid (LPPT) - Lisbon (LECU) </span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="title">Flight request 301</span>
+                  <span class="flight">LIsbon (LECU) - Madrid (LPPT)</span>
+                  <span class="flight">Madrid (LPPT) - Lisbon (LECU) </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <h3>Booking confirmation</h3>
+        <div class="lead">
+          <h4>Waiting confirmation</h4>
+          <p>
+            Availability and purchase detailes have been confirmed. You can now proceed with personal details to complete booking process.
+          </p>
+        </div>
+        <div class="offer">
+          <div class="header">
+            <h4>Global Express</h4>
+            <div class="actions">
+              <a href="#" class="btn show">Show details</a>
+            </div>
+          </div>
+          <div class="body">
+            <dl>
+              <dt>Aircraft/Type:</dt>
+              <dd>Citation 525  / Mid jet</dd>
+              <dt>Price:</dt>
+              <dd><strong>10.120,00 EUR</strong></dd>
+            </dl>
+            <dl class="extra">
+              <dt>Offer created:</dt>
+              <dd><strong>Offer updated January 28, 2015. Offer valid until January 2015.</strong></dd>
+              <dt>Offer availability:</dt>
+              <dd>None</dd>
+              <dt>Flight Times:</dt>
+              <dd>None</dd>
+              <dt>Passengers:</dt>
+              <dd>LEG1: None / LEG2: None</dd>
+              <dt>Baggage:</dt>
+              <dd>None</dd>
+              <dt>Additional Requests:</dt>
+              <dd>None</dd>
+            </dl>
+          </div>
+          <div class="additional">
+            <h5>Additional Aircraft Details</h5>
+            <dl>
+              <dt>Tail Number:</dt>
+              <dd>None</dd>
+              <dt>Constructed:</dt>
+              <dd>None</dd>
+              <dt>Number of seats:</dt>
+              <dd>None</dd>
+            </dl>
+            <div class="galleries">
+              <div class="switch">
+                <a href="#" class="icon icon-camera active" data-target=".mobile-gallery-container"></a><br>
+                <a href="#" class="icon icon-seats" data-target=".mobile-floorplan-container"></a>
+              </div>
+              <div class="images">
+                <div class="gallery mobile-gallery-container show">
+                  <img src="/media/images/citation_ultra_outer.jpg" alt="Citation Ultra Outer" />
+                </div>
+                <div class="gallery mobile-floorplan-container">
+                  <img src="/media/images/citation_ultra_layout.jpg" alt="Citation Ultra Outer Layout" />
+                </div>
+              </div>
+            </div>
+            <dl>
+              <dt>Operators notice</dt>
+              <dd>None</dd>
+            </dl>
+          </div>
+          <div class="footer">
+            <a href="#" class="btn right disabled">Add passenger details</a>
+          </div>
+        </div>
+      </div>
+      <div class="last-skew white"></div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "preview/structure/base.html" %}
+{% block content %}
+
+<section class="gradient image intro first results user confirmations passangers">
+  <div class="container" ng-view>
+    <div class="details-content">
+      <div class="passanger-header">
+        <h2>
+          Booking flight
+          <ul class="breadcrumbs">
+            <li><a href="/common/preview/structure/booking-flight/">Payment</a></li>
+            <li class="active"><a href="/common/preview/structure/passangers/">Passanger details</a></li>
+            <li><a href="/common/preview/structure/booking-confirmation/">Booking confirmation</a></li>
+          </ul>
+        </h2>
+        <div class="main first">
+          <div class="lead">
+            <h4>Information about passangers</h4>
+            <p>
+              Availability and purchase detailes have been confirmed. You can now proceed with personal details to complete booking process.
+            </p>
+          </div>
+        </div>
+      </div>
+      <form class="login" action="/common/preview/structure/booking-confirmation/" method="get">
+        <div class="passanger single">
+          <div class="sidebar">
+            <h4>Passanger 1</h4>
+          </div>
+          <div class="main">
+              <p>
+                <label>Title</label>
+                <input type="radio" name="title" value="0" id="title[1]-1"><label for="title[1]-1" class="stacked">Mr</label>
+                <input type="radio" name="title" value="0" id="title[1]-2"><label for="title[1]-2" class="stacked">Mrs</label>
+                <input type="radio" name="title" value="0" id="title[1]-3"><label for="title[1]-3" class="stacked">Ms</label>
+              </p>
+              <p>
+                <label for="first-name">First name</label>
+                <input type="text" name="first_name" value="" id="first-name" />
+              </p>
+              <p>
+                <label for="last-name">Last name</label>
+                <input type="text" name="last_name" value="" id="last-name" />
+              </p>
+              <p>
+                <label for="passport">Passport no.</label>
+                <input type="text" name="passport" value="" id="passport" />
+              </p>
+              <p class="date">
+                <label>Valid thru (MM/YY)</label>
+                <span class="date">
+                  <select name="month">
+                    <option>MONTH</option>
+                    <option value="1">01</option>
+                    <option value="1">02</option>
+                    <option value="1">03</option>
+                    <option value="1">04</option>
+                    <option value="1">05</option>
+                    <option value="1">06</option>
+                    <option value="1">07</option>
+                    <option value="1">08</option>
+                    <option value="1">09</option>
+                    <option value="1">10</option>
+                    <option value="1">11</option>
+                    <option value="1">12</option>
+                  </select>
+                </span>
+                <span class="date">
+                  <select name="year">
+                    <option>YEAR</option>
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                  </select>
+                </span>
+              </p>
+              <p class="list">
+                <label>On board for</label>
+                <span class="list">
+                  <label><input type="checkbox" name="leg1" value="1">Leg 1 - Lisbon (LPPT) - Madrid (LECU)</label>
+                  <label><input type="checkbox" name="leg2" value="1">Leg 2 (Return) - Madrid (LECU) - Lisbon (LPPT)</label>
+                </span>
+              </p>
+          </div>
+        </div>
+        <div class="passanger actions">
+          <div class="main">
+            <p class="indent">
+              <input type="submit" name="submit" value="Complete booking" class="btn" />
+              <a href="#" class="add-passanger btn light right">Add passanger</a>
+            </p>
+          </div>
+        </div>
+      </form>
+      <div class="last-skew white"></div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+<div class="future_fancybox_content login-popup">
+  <!-- <h3 class="center">Login to proceed</h3>
+  <p class="center">
+    Only registered customers can make requests for offer. <br>
+    Login or create your new account
+  </p> -->
+  <h3 class="center">
+      Login or create an account
+  </h3>
+  <p>Only registered customers can make requests for offer.</p>
+  <form class="top-login" name="loginModal" ng-submit="processLogin(loginModal.$valid)" autocomplete="off" novalidate>
+    <p>
+      <div ng-if="loginModalFailed" class="alert alert-danger error-message">
+        <div ng-if="loginModalFailed">
+          * Incorrect password or username!
+        </div>
+      </div>
+    </p>
+    <p>
+      <input type="text" name="userName" ng-model="login.userName" placeholder="Your email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required />
+      <div ng-show="submitted && loginModal.userName.$invalid" class="alert alert-danger error-message">
+        <div ng-show="loginModal.userName.$error.required">
+          * E-mail is required! Please enter a valid email address.
+        </div>
+      </div>
+    </p>
+    <p>
+      <input type="password" name="password" ng-model="login.password" placeholder="Password" required /> <br>
+      <div ng-show="submitted && loginModal.password.$invalid" class="alert alert-danger error-message">
+        <div ng-show="loginModal.password.$error.required">
+          * Password is required!
+        </div>
+      </div>
+      <!-- <a href="/account/#/password">Forgot your password?</a>#} -->
+    </p>
+
+    <p class="center">
+      <button type="submit" class="btn" ng-click="submitted=true">Login</button>
+    </p>
+  </form>
+  <p>
+    <a href="/account/#/new">Or create a NEW ACCOUNT</a>
+  </p>
+</div>

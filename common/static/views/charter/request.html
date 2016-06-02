@@ -1,0 +1,62 @@
+<div class="details-content">
+  <h2>Quote request summary</h2>
+  <div class="section">
+    <div class="sidebar">
+      <h4>Flight summary</h4>
+    </div>
+    <div class="main">
+      <form name="submitOffer" ng-submit="save()" novalidate>
+        <h3 ng-show="flight.legs.length == 1 && flight.returnFlight == false">One way flight <span class="icon icon-single-leg"></span></h3>
+        <h3 ng-show="flight.legs.length > 1 && flight.returnFlight == false">Multi leg flight <span class="icon icon-multi-leg"></span></h3>
+        <h3 ng-show="flight.returnFlight == true">Return flight <span class="icon icon-return-leg"></span></h3>
+        <ul class="flight" ng-repeat="leg in flight.legs">
+          <li><h4>[[ leg.fromAirportObj.city ]] <span ng-hide="leg.fromAirportObj.iataCode.trim() ==''">([[ leg.fromAirportObj.iataCode ]])</span> - [[ leg.toAirportObj.city ]] <span ng-hide="leg.toAirportObj.iataCode.trim() ==''">([[ leg.toAirportObj.iataCode ]])</span></h4></li>
+          <li>
+            <div class="label">
+              Date / Time
+            </div>
+            <div class="value">
+              [[ leg.date ]] / [[ leg.time ]]
+            </div>
+          </li>
+          <li>
+            <div class="label">
+              Passengers
+            </div>
+            <div class="value">
+              [[ leg.passengers ]]
+            </div>
+          </li>
+          <li>
+            <div class="label">
+              Aircraft type
+            </div>
+            <div class="value">
+              <span ng-repeat="category in flight.selectedCategories">
+                [[ (categories | filter: { id: category }:true)[0].code ]]<br />
+              </span>
+            </div>
+          </li>
+          <li>
+            <div class="label">
+              Baggage
+            </div>
+            <div class="value">
+              [[ flight.baggageDescription ]]
+            </div>
+          </li>
+          <li>
+            <div class="label">
+              Additional requests
+            </div>
+            <div class="value">
+              [[ flight.additionalInfo ]]
+            </div>
+          </li>
+        </ul>
+        <button type="submit" class="btn">Request quotes</button>
+      </form>
+    </div>
+  </div>
+  <div class="last-skew white"></div>
+</div>

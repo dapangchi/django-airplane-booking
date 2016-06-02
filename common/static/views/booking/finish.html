@@ -1,0 +1,101 @@
+<div class="details-content">
+  <div class="header">
+    <h2>
+      Flight booking
+      <ul class="breadcrumbs">
+        <li>Payment</a></li>
+        <li>Passenger details</a></li>
+        <li class="active">Booking confirmation</li>
+      </ul>
+    </h2>
+    <div class="sidebar">
+    </div>
+    <div class="main">
+      <div class="lead">
+        <h4>Booking confirmed</h4>
+        <p>
+          Your flight Ref: [[ flightNO ]] is now fully paid and booked. You will receive a final invoice from the operator of this flight along with full crew details and FBO/handling information.
+        </p>
+        <p class="small">
+          Return to <a href="/flights/requests/">Bookings &amp; request page</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="sidebar">
+      <h4>Flight details</h4>
+    </div>
+    <div class="main">
+      <ul class="flight" ng-repeat="leg in flight.legs">
+        <li><h4>[[ leg.fromAirportObj.city ]] ([[ leg.fromAirportObj.code ]]) - [[ leg.toAirportObj.city ]] ([[ leg.toAirportObj.code ]])</h4></li>
+        <li>
+          <div class="label">
+            Date / Time
+          </div>
+          <div class="value">
+            [[ leg.date ]] / [[ leg.time ]]
+          </div>
+        </li>
+        <li>
+          <div class="label">
+            Passengers
+          </div>
+          <div class="value">
+            [[ leg.passengers ]]
+          </div>
+        </li>
+        <li>
+          <div class="label">
+            Aircraft type
+          </div>
+          <div class="value">
+            [[ offer.aircraft.category ]]
+          </div>
+        </li>
+        <li>
+          <div class="label">
+            Baggage
+          </div>
+          <div class="value">
+            [[ flight.baggageDescription ]]
+          </div>
+        </li>
+        <li>
+          <div class="label">
+            Additional requests
+          </div>
+          <div class="value">
+            [[ flight.additionalInfo ]]
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="section">
+    <div class="sidebar">
+      <h4>Payment details</h4>
+    </div>
+    <div class="main">
+      <ul class="flight no-header">
+        <li>
+          <div class="label">
+            Payment method
+          </div>
+          <div class="value">
+            Credit card
+          </div>
+        </li>
+        <li>
+          <div class="label">
+            Total amount
+          </div>
+          <div class="value">
+            [[ offer.price ]] [[ offer.currency ]]
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="last-skew white"></div>
+</div>

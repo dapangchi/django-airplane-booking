@@ -1,0 +1,78 @@
+<div class="details-content">
+  <div class="passanger-header">
+    <h2>
+      Flight Booking
+      <ul class="breadcrumbs">
+        <li>Payment</a></li>
+        <li class="active">Passenger details</li>
+        <li>Booking confirmation</li>
+      </ul>
+    </h2>
+    <div class="main first">
+      <div class="lead">
+        <h4>Passenger information</h4>
+        <p>
+          Your booking for flight No.[[offerNo]] is now confirmed. You can proceed with passenger details to complete your booking.
+        </p>
+      </div>
+    </div>
+  </div>
+  <form class="addPassangers" name="addPassangers" ng-submit="submit(addPassangers.$valid)" novalidate>
+    <div class="passanger single" ng-repeat="row in request.passengers">
+      <div class="sidebar">
+        <h4>Passanger [[ $index + 1 ]]</h4>
+      </div>
+      <div class="main">
+          <p>
+            <label>Title</label>
+            <span class="input">
+              <input type="radio" ng-model="row.title" value="Mr" id="mr-[[ $index ]]"><label for="mr-[[ $index ]]" class="stacked">Mr</label>
+              <input type="radio" ng-model="row.title" value="Mrs" id="mrs-[[ $index ]]"><label for="mrs-[[ $index ]]" class="stacked">Mrs</label>
+              <input type="radio" ng-model="row.title" value="Ms" id="ms-[[ $index ]]"><label for="ms-[[ $index ]]" class="stacked">Ms</label>
+              <a href class="icon icon-delete right remove-leg" ng-click="remove(row)" ng-show="request.passengers.length > 1"></a>
+            </span>
+          </p>
+          <p>
+            <label for="first-name">First name</label>
+            <input type="text" name="first_name" ng-model="row.firstName" placeholder="Required" required />
+          </p>
+          <p>
+            <label for="last-name">Last name</label>
+            <input type="text" name="last_name" ng-model="row.lastName" placeholder="Required" required />
+          </p>
+          <p>
+            <label for="passport">Passport no.</label>
+            <input type="text" name="passport" ng-model="row.passport" placeholder="Required" required />
+          </p>
+          <p class="date">
+            <label>Valid thru (MM/YY)</label>
+            <span class="date selectize-style">
+              <ui-select name="month" ng-model="row.validMonth" theme="selectize" required>
+                <ui-select-match placeholder="Month">[[ $select.selected ]]</ui-select-match>
+                <ui-select-choices repeat="i in [01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12] | filter: $select.search">
+                  [[ i ]]
+                </ui-select-choices>
+              </ui-select>
+            </span>
+            <span class="date selectize-style">
+              <ui-select name="year" ng-model="row.validYear" theme="selectize" required>
+                <ui-select-match placeholder="Year">[[ $select.selected ]]</ui-select-match>
+                <ui-select-choices repeat="i in [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] | filter: $select.search">
+                  [[ i ]]
+                </ui-select-choices>
+              </ui-select>
+            </span>
+          </p>
+      </div>
+    </div>
+    <div class="passanger actions">
+      <div class="main">
+        <p class="indent">
+          <input type="button" name="submit" value="Add passanger" class="btn light " ng-click="addRow();" />
+          <input type="submit" name="submit" value="Complete booking" class="btn right" />
+        </p>
+      </div>
+    </div>
+  </form>
+  <div class="last-skew white"></div>
+</div>

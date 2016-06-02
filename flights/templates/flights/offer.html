@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="gradient image intro first results">
+  <div class="container">
+    <div class="details-content">
+        <h2>Order</h2>
+
+        <p>
+            Merchant ID: {{ order.merchant_id }} <br>
+            Amount: {{ order.amount }} <br>
+            Currency: {{ order.currency }} <br>
+            Reference number: {{ order.refno }} <br>
+            Sign: {{ order.sign }} <br>
+        </p>
+
+        <br>
+        <hr>
+        <br>
+
+<form name="uppform" action="https://pilot.datatrans.biz/upp/jsp/upStart.jsp" method="post" target="_blank">
+    <input type="hidden" name="language" value="en" />
+    <table cellspacing="2" cellpadding="0" width="440">
+        <tbody>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" align="left">Merchant Id :</td>
+            <td width="10"></td>
+            <td nowrap="nowrap" align="left">
+                <input name="merchantId" value="{{ order.merchant_id }}" />
+
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" align="left">Amount :</td>
+            <td width="10"></td>
+            <td nowrap="nowrap" align="left">
+                <input name="amount" value="{{ order.amount }}" /> (=10.00)
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" align="left">Currency :</td>
+            <td width="10"></td>
+            <td nowrap="nowrap" align="left">
+                <input name="currency" value="{{ order.currency }}" />
+
+            </td>
+        </tr>
+        <tr>
+            <td nowrap="nowrap" align="left">Reference number :</td>
+            <td width="10"></td>
+            <td colspan="2" nowrap="nowrap" align="left">
+                <input name="refno" value="{{ order.refno }}" />
+
+                (refno)
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td>Sign :</td>
+            <td></td>
+            <td><input name="sign" value="{{ order.sign }}" /></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td align="left">
+                <button>Send</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

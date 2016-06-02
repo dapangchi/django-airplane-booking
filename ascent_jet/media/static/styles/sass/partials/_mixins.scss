@@ -1,0 +1,51 @@
+@mixin font-smoothing($val: antialiased) {
+  -webkit-font-smoothing: $val;
+  -moz-font-smoothing: $val;
+  -ms-font-smoothing: $val;
+  -o-font-smoothing: $val;
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+
+@mixin clearfix {
+  *zoom: 1;
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+
+// Media queries
+$mobile: 767px;
+$tablet: 960px;
+$desktop: 1024px;
+$full: 1160px;
+
+@mixin respond-to($media) {
+  @if $media == mobile {
+    @media only screen and (max-width: $mobile) { @content; }
+  }
+  @else if $media == tablet {
+    @media only screen and (min-width: $mobile + 1) and (max-width: $tablet - 1) { @content; }
+  }
+  @else if $media == desktop {
+    @media only screen and (min-width: $tablet) and (max-width: $full - 1) { @content; }
+  }
+  @else if $media == full {
+    @media only screen and (min-width: $desktop) { @content; }
+  }
+}

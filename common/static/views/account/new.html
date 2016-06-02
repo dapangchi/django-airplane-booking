@@ -1,0 +1,77 @@
+<form class="login" name="createAccount" ng-submit="create(createAccount.$valid)" autocomplete="off" novalidate>
+  <h2>Create an account</h2>
+  <div ng-show="submitted && createAccount.$invalid" class="alert alert-danger error-message">
+    <div ng-show="createAccount.$error">
+      Error message goes here
+    </div>
+  </div>
+  <p>
+    <label>Title</label>
+    <input type="radio" name="title" ng-model="account.customerInfo.title" value="Mr" id="title-1"><label for="title-1" class="stacked" required>Mr</label>
+    <input type="radio" name="title" ng-model="account.customerInfo.title" value="Mrs" id="title-2"><label for="title-2" class="stacked" required>Mrs</label>
+    <input type="radio" name="title" ng-model="account.customerInfo.title" value="Ms" id="title-3"><label for="title-3" class="stacked" required>Ms</label>
+  </p>
+  <p>
+    <label for="first_name">First name</label>
+    <input type="text" name="first_name" ng-model="account.customerInfo.firstName" id="first_name" placeholder="required" required />
+  </p>
+  <p>
+    <label for="last_name">Last name</label>
+    <input type="text" name="last_name" ng-model="account.customerInfo.lastName" id="last_name" placeholder="required"  required />
+  </p>
+
+  <p>
+    <label for="address">Address</label>
+    <input type="text" name="address" ng-model="account.customerInfo.address" id="address" placeholder="required" required />
+  </p>
+  <p><input type="hidden" name="test_field" value="">
+    <label for="address2">Address</label>
+    <input type="text" name="address2" ng-model="account.customerInfo.address2" placeholder="optional" id="address2" />
+  </p>
+  <p>
+    <label for="city">City</label>
+    <input type="text" name="city" ng-model="account.customerInfo.city" id="city" placeholder="required"  required />
+  </p>
+  <p>
+    <label for="zipCode">ZIP</label>
+    <input type="text" name="zipCode" ng-model="account.customerInfo.zipCode" id="zipCode" placeholder="required" required />
+  </p>
+  <p class="dark">
+    <label for="country">Country</label>
+    <span class="selectize-style">
+      <ui-select ng-model="account.customerInfo.countryId" theme="selectize" required>
+        <ui-select-match placeholder="Choose country">[[ $select.selected.name ]]</ui-select-match>
+        <ui-select-choices repeat="item.id as item in countries | filter: $select.search" refresh="refreshCountries($select.countries)" refresh-delay="0">
+          [[ item.name ]]
+        </ui-select-choices>
+      </ui-select>
+    </span>
+  </p>
+  <p>
+    <label for="email">Email</label>
+    <input type="text" name="email" ng-model="account.userInfo.userName" id="email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="required" required />
+  </p>
+  <p>
+    <label for="password">Password</label>
+    <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+    <input style="display:none" type="text" name="fakeusernameremembered"/>
+    <input style="display:none" type="password" name="fakepasswordremembered"/>
+    <input type="password" name="password" ng-model="account.userInfo.password" id="password" placeholder="minimum 6 characters" equals="[[fake.repeat_password]]" ng-minlength="6" required />
+  </p>
+  <p>
+    <label for="repeat_password">Repeat password</label>
+    <input type="password" name="repeat_password" ng-model="fake.repeat_password" id="repeat_password" equals="[[account.userInfo.password]]" ng-minlength="6" required />
+  </p>
+  <p class="indent">
+    <input type="checkbox" name="remember_me" value="1" id="remember">
+    <label for="remember" required>Remember me on this computer</label>
+  </p>
+  <p class="indent">
+    <input type="checkbox" name="tos" value="1" id="tos" ng-model="fakeModel" required >
+    <label required for="tos">I accept Ascent Jet's <a href="/legal/terms-and-conditions" target="_blank">Terms and Conditions</a></label>
+  </p>
+  <p class="indent">
+    <input  ng-click="submitted=true" type="submit" name="submit" value="Create account" class="btn" ng-click="doSomething()"/>
+  </p>
+</form>
+<div class="last-skew white"></div>

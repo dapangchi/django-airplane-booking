@@ -1,0 +1,196 @@
+{% extends "preview/structure/base.html" %}
+{% block title %}{{ page_title }} - Ascent Jet{% endblock %}
+
+{% block content %}
+<section class="image slanted first article bottom-light-gray top-light-gray" style="background-image:url('{{ node.image.resource.url }}');"></section>
+{% for article in node.sorted_article_set.all %}
+<section class="image light-gray bottom-white">
+  <div class="container">
+    <div class="side">
+      {% if subnavigation %}
+      <ul class="nav">
+        {% for sn in subnavigation %}
+        <li {% if sn.slug in request.path %}class="active"{% endif %}><a href="/{{ sn.slug }}">{{ sn }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    <div class="content">
+      <h1>{{ article.title }}</h1>
+      <p class="lead">
+        {{ article.lead }}
+      </p>
+    </div>
+  </div>
+</section>
+<section class="clean top-light-gray small-margin">
+  <div class="container">
+    <div class="content content-margin content-remove">
+      {{ article.body | safe }}
+    </div>
+  </div>
+</section>
+{% if article.image %}
+<section class="image both top-white plain bottom-white" style="background-image:url('{{ article.image.resource.url }}');"></section>
+{% endif %}
+{% if article.conclusion %}
+<section class="clean top-light-gray small-margin">
+  <div class="container">
+    <div class="content content-margin">
+      {{ article.conclusion | safe }}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endfor %}
+
+<!-- One of the nodes has attached airplane categories and airplanes descriptions -->
+{% if airplane_categories %}
+{% for category in airplane_categories %}
+<section class="category clean">
+  <div class="container">
+    <h2>{{ category.title }}</h2>
+    <div class="side">
+      <figure>
+        <!-- <img id="aircraft_image-{{ forloop.counter }}" src="{{ category.image.get_thumb_400 }}"> -->
+        <img id="aircraft_image-{{ forloop.counter }}" src="">
+        {% if category.image.caption %}
+        <figcaption>{{ category.image.caption }}</figcaption>
+        {% endif %}
+        <figcaption></figcaption>
+      </figure>
+    </div>
+    <div class="content">
+      <p>
+        {{ category.lead | safe }}
+      </p>
+      <h3>View aircraft</h3>
+      <ul class="aircrafts">
+        {% for airplane in category.airplane_set.all %}
+        <li class="closed">
+          <div class="title">
+            {{ airplane.title }}
+            <span class="icons icons-slide-down"></span>
+            <span class="icons icons-slide-up"></span>
+          </div>
+          <div class="extra">
+            <div class="gallery">
+              <div class="gallery-img" style="background-image: url({{ airplane.outer_image.get_thumb_325 }});">
+              </div>
+              <div class="gallery-img" style="background-image: url({{ airplane.inner_image.get_thumb_325 }});">
+              </div>
+            </div>
+            <div class="details">
+              <h4>Aircraft Info</h4>
+              <dl>
+                {% if airplane.passenger_seating %}
+                <dt>Passenger Seating:</dt>
+                <dd>{{ airplane.passenger_seating }}</dd>
+                {% endif %}
+                {% if airplane.luggage_capacity %}
+                <dt>Luggage Capacity:</dt>
+                <dd>{{ airplane.luggage_capacity }}</dd>
+                {% endif %}
+                {% if airplane.max_speed %}
+                <dt>Max. Cruise Speed:</dt>
+                <dd>{{ airplane.max_speed }}</dd>
+                {% endif %}
+                {% if airplane.max_range %}
+                <dt>Range:</dt>
+                <dd>{{ airplane.max_range }}</dd>
+                {% endif %}
+                {% if airplane.takeoff_distance %}
+                <dt>Takeoff distance:</dt>
+                <dd>{{ airplane.takeoff_distance }}</dd>
+                {% endif %}
+                {% if airplane.max_altitude %}
+                <dt>Max. Operating Altitude:</dt>
+                <dd>{{ airplane.max_altitude }}</dd>
+                {% endif %}
+              </dl>
+            </div>
+            <div class="floorplan">
+              <img src="{{ airplane.layout_image.get_thumb_325 }}">
+            </div>
+          </div>
+        </li>
+
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endfor %}
+{% endif %}
+
+<!-- CONTACT FORM -->
+{% if node.pk == 13 %}
+<section class="clean top-light-gray small-margin">
+  <div class="container">
+    <div class="content">
+      <div class="login contact-form">
+        {% if messages %}
+        <h1>Thank you for contacting us</h1>
+        <p class="lead">
+          {% for message in messages %}
+          {{ message }}
+          {% endfor %}
+        </ul>
+      </p>
+      {% else %}
+      <form class="login" id="contactForm" name="contactForm" autocomplete="off" novalidate action="/about-us/contact/add/" method="POST">
+        {% csrf_token %}
+        <h1>Contact us</h1>
+        <p>
+          <label for="first_name">Your name</label>
+          <input type="text" name="first_name" id="first_name" placeholder="required" value="{{ form.first_name.value }}" required />
+          {% if form.first_name.errors.0 %}
+            <span class="alert alert-danger error-msg">{{ form.first_name.errors.0 }}</span>
+          {% endif %}
+        </p>
+        <p>
+          <label for="email">Email</label>
+          <input type="text" name="email" id="email" placeholder="required" value="{{ form.email.value }}" required />
+          {% if form.first_name.errors.0 %}
+            <span class="email alert-danger error-msg">{{ form.email.errors.0 }}</span>
+          {% endif %}
+        </p>
+        <p>
+          <label for="email">Message</label>
+          <textarea id="id_message" name="message" placeholder="required" rows="7" required>{{ form.message.value }}</textarea>
+          {% if form.message.errors.0 %}
+            <span class="alert alert-danger error-msg">{{ form.message.errors.0 }}</span>
+          {% endif %}
+        </p>
+        <p>
+          {{ form.captcha }}
+          {% if form.captcha.errors.0 %}
+            <span class="alert alert-danger error-msg special">{{ form.captcha.errors.0 }}</span>
+          {% endif %}
+        </p>
+        <p class="indent">
+          <input type="submit" name="submit" value="Submit" class="btn"/>
+        </p>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</section>
+{% endif %}
+
+<script type="text/javascript">
+    var airplaneImg = new Array()
+    {% for category in airplane_categories %}
+        airplaneImg.push('{{ category.image.get_thumb_400 }}')
+    {% endfor %}
+    function preLoad(obj) {
+        for(var i=1; i<=obj.length; i++) {
+            var img = new Image()
+            $('#aircraft_image-' + i).attr('src', airplaneImg[i-1])
+        }
+    }
+    preLoad(airplaneImg);
+</script>
+{% endblock %}
+

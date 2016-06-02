@@ -1,0 +1,124 @@
+<div class="details-content">
+  <form name="updateQuote" ng-class="{'ng-submitted' : submitted}" ng-submit="submit(updateQuote.$valid)" novalidate>
+    <h2>Empty leg request</h2>
+    <div class="row">
+      <div class="side">
+        <div class="icon icon-plane main"></div>
+        <h3 class="active">Flight details <span class="icon icon-check"></span></h3>
+      </div>
+      <div class="list">
+        <div class="flight" ng-repeat="leg in charter.legs">
+          <h4>[[ leg.fromAirportObj.city ]] ([[ leg.fromAirportObj.code ]]) - [[ leg.toAirportObj.city ]] ([[ leg.toAirportObj.code ]])</h4>
+          <ul>
+            <li>
+              <span class="label">Date / Time</span>
+              <span class="value">[[ leg.date ]] / [[ leg.time ]]</span>
+            </li>
+            <li>
+              <span class="label">Passengers</span>
+              <span class="value">[[ leg.passengers ]]</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="side">
+        <div class="icon icon-plane-top main top"></div>
+        <h3 class="active">Aircraft details <span class="icon icon-check"></span></h3>
+      </div>
+      <div class="list">
+        <div class="column flight-info">
+          <h4>[[ charter.offers[0].aircraft.type ]]</h4>
+          <dl>
+            <dt>Size</dt>
+            <dd>[[ charter.offers[0].aircraft.category ]]</dd>
+            <dt>Capacity</dt>
+            <dd>[[ charter.offers[0].aircraft.seats ]] seats</dd>
+          </dl>
+        </div>
+        <!-- <div class="column galleries last">
+          <ul class="clearfix">
+            <li><a href ng-show="(charter.offers[0].aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }).length > 0" class="icon icon-camera" ng-class="{'active': gallery}" data-target=".gallery-container" ng-click="switchGallery('gallery')"></a></li>
+            <li><a href ng-show="(charter.offers[0].aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }).length > 0" class="icon icon-seats" ng-class="{'active': floorplan}" data-target=".floorplan-container" ng-click="switchGallery('floorplan')"></a></li>
+          </ul>
+          <div class="images" ng-show="(charter.offers[0].aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }).length > 0">
+            <div class="gallery-container" ng-show="gallery && (charter.offers[0].aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }).length > 0">
+              <slick init-onload="true" data="charter.offers[0].aircraft.imageIds">
+                <div ng-repeat="image in charter.offers[0].aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }">
+                  <img ng-src="http://ascentjet.com/rest/aircraft/images/[[ charter.offers[0].aircraft.aircraftId ]]/[[ image.id ]]" />
+                </div>
+              </slick>
+            </div>
+            <div class="floorplan-container" ng-show="floorplan && (charter.offers[0].aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }).length > 0">
+              <slick init-onload="true" data="charter.offers[0].aircraft.imageIds">
+                <div ng-repeat="image in charter.offers[0].aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }">
+                  <img ng-src="http://ascentjet.com/rest/aircraft/images/[[ charter.offers[0].aircraft.aircraftId ]]/[[ image.id ]]" />
+                </div>
+              </slick>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="side">
+        <div class="icon icon-baggage main baggage"></div>
+        <h3 ng-class="{'active': additional.baggageType || additional.additionalInfo}">Additional <br />Requirements <span class="icon icon-check"></span></h3>
+      </div>
+      <div class="list">
+        <div class="column">
+          <label for="baggage">Baggage</label>
+          <span class="selectize-style">
+            <ui-select id="baggage" name="baggageId" ng-model="additional.baggageType" theme="selectize" required>
+              <ui-select-match placeholder="Select baggage requirement">[[ $select.selected.name ]]</ui-select-match>
+              <ui-select-choices repeat="bag.id as bag in baggage track by bag.code">
+                [[ bag.name ]]
+              </ui-select-choices>
+            </ui-select>
+            <div ng-show="submitted && updateQuote.baggageId.$invalid" class="alert alert-danger error-message">
+              <div ng-show="updateQuote.baggageId.$error.required">
+                <br>
+                * This field is required!
+              </div>
+            </div>
+          </span>
+        </div>
+        <div class="column last">
+          <label for="additional-requirements">Additional requirements
+            <div class="popup tooltip right">
+              <a href ng-click="showTooltip()" class="icon icon-info right"></a>
+              <div class="tooltip-container" ng-show="tooltipShown">
+                <div class="tooltip-close">
+                  <a href ng-click="hideTooltip()"><span>Close </span> <span class="icon icon-close"></span></a>
+                </div>
+                <div class="tooltip-content">
+                  Use this area to enter any information you would like us to take into account while selecting and offering you aircraft for your trip.
+                  This can include special catering requests, ground transportation or specific type of aircraft you would like to fly in.
+                  You can even specify your favorite operator and aircraft if you have a particular preference, and we will see what's available.
+                  If you require overnight stays or a multi-leg flight, it's a whole lot easier to tell us here.
+                  This information will be passed on to the respective operators who will be solicited for your flight(s) and comprehensive offers will be sent to you.
+                  <br><br>
+                  Please remember that you can always call our support team on +41(22) 366 42 05 at any time if personalized assistance is required.</div>
+              </div>
+            </div>
+          </label>
+          <textarea name="additional" ng-model="additional.additionalInfo" rows="8" cols="40" id="additional-requirements"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row last">
+      <div class="price" ng-show="charter.offers[0].price > 0">
+        <div class="label">
+          Price
+        </div>
+        <div class="value">
+          <strong>[[ charter.offers[0].price ]]</strong>[[ charter.offers[0].currency ]]
+        </div>
+      </div>
+      <a href="#/empty-leg/[[ charter.id ]]" class="btn" ng-click="submit(updateQuote.$valid); submitted=true" ng-show="signed == 'true'">Request quote</a>
+      <a ng-href="#/empty-leg/[[ charter.id ]]" class="btn" ng-click="loginPopup('phone'); submitted=true" ng-show="signed != 'true'">Request quote</a>
+    </div>
+    <div class="last-skew white"></div>
+  </form>
+</div>

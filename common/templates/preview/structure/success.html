@@ -1,0 +1,35 @@
+{% extends "preview/structure/base.html" %}
+{% block content %}
+
+<section class="gradient image intro first results user confirmations">
+  <div class="container">
+    <div class="details-content">
+      <div class="header">
+        <h2>
+          Booking flight
+          <ul class="breadcrumbs">
+            <li class="active">Payment</li>
+            <li>Passanger details</li>
+            <li>Booking confirmation</li>
+          </ul>
+        </h2>
+        <div class="sidebar">
+        </div>
+        <div class="main">
+          <div class="lead">
+            <h4>Booking confirmed</h4>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id augue imperdiet, dictum urna et, laoreet urna. Nullam laoreet elit ligula, ut posuere augue mollis vel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas id augue imperdiet, dictum urna et.
+            </p>
+            <p>
+              <br><br>
+              <a href="/common/preview/structure/booking/#/{{ offer.id }}" class="btn">Add passanger information</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="last-skew white"></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

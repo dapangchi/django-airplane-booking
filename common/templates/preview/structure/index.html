@@ -1,0 +1,16 @@
+{% extends "preview/structure/base.html" %}
+{% block content %}
+  <section class="image home search negative-top" style="background-image('/media/static/images/home.jpg');">
+OKOK
+  </section>
+{% endblock %}
+
+
+THIS IS HOMEPAGE
+
+<h1>Snippets</h1>
+
+{% for snippet in snippets %}
+    <h2>{{ snippet.title }} (id: {{ snippet.id }})</h2>
+    <p>{{ snippet.body }}</p>
+{% endfor %}

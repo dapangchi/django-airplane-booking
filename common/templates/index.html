@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="image intro first home index slider" style="background-image: url('{{ hero_image.0.url }}'); background-color:#000000;">
+    <div class="container">
+      <div class="slider-prev"><img src="media/images/prev.png"></div>
+      <div class="slider-next"><img src="media/images/next.png"></div>
+      <div class="search-form-wrapper">
+        <div class="search-form">
+            <div class="slider-heading">
+                <h2>Pricing direct from operators</h2>
+                <p class="lead">
+                    We offer total transparency
+                </p>
+            </div>
+            <div ng-view></div>
+        </div>
+      </div>
+    </div>
+    <!-- <a href="#feature" class="scroll-more" scroll-to="clean">Scroll to discover more <span class="icon icon-down"></span></a> -->
+  </section>
+  <section id="clean" class="clean">
+    <div class="container">
+      <div class="feature" id="feature">
+        {% if snippets.1.icon %}
+          <span class="icon {{ snippets.1.icon }}"></span>
+        {% endif %}
+        <h3>{{ snippets.1.title }}</h3>
+        <p>
+          {{ snippets.1.body }}
+        </p>
+        {% if snippets.1.link %}
+        <a href="{{ snippets.1.link }}" class="btn">
+          {% if snippets.1.link_title %}
+              {{ snippets.1.link_title }}
+          {% else %}
+              Learn more
+          {% endif %}
+        </a>
+        {% endif %}
+      </div>
+      <div class="feature">
+        {% if snippets.2.icon %}
+          <span class="icon {{ snippets.2.icon }}"></span>
+        {% endif %}
+        <h3>{{ snippets.2.title }}</h3>
+        <p>
+          {{ snippets.2.body }}
+        </p>
+        {% if snippets.2.link %}
+        <a href="{{ snippets.2.link }}" class="btn">
+          {% if snippets.2.link_title %}
+              {{ snippets.2.link_title }}
+          {% else %}
+              Learn more
+          {% endif %}
+        </a>
+        {% endif %}
+      </div>
+      <div class="feature">
+        {% if snippets.3.icon %}
+          <span class="icon {{ snippets.3.icon }}"></span>
+        {% endif %}
+        <h3>{{ snippets.3.title }}</h3>
+        <p>
+          {{ snippets.3.body }}
+        </p>
+        {% if snippets.3.link %}
+        <a href="{{ snippets.3.link }}" class="btn">
+          {% if snippets.3.link_title %}
+              {{ snippets.3.link_title }}
+          {% else %}
+              Learn more
+          {% endif %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  <section class="image both bottom-white top-white benefits" style="background-image:url('{{ body_image.url }}');">
+    <div class="container">
+      <div class="box">
+        <h3>{{ snippets.4.title }}</h3>
+        <p>
+          {{ snippets.4.body }}
+        </p>
+        {% if snippets.4.link %}
+        <!-- <a href="{{ snippets.4.link }}" class="btn">
+          {% if snippets.4.link_title %}
+              {{ snippets.4.link_title }}
+          {% else %}
+              Learn more
+          {% endif %}
+        </a> -->
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  <section class="clean">
+    <div class="container">
+      <div class="feature">
+        {% if snippets.5.icon %}
+          <span class="icon {{ snippets.5.icon }}"></span>
+        {% endif %}
+        <h3>{{ snippets.5.title }}</h3>
+        <p>
+          {{ snippets.5.body }}
+        </p>
+        {% if snippets.5.link %}
+        <a href="{{ snippets.5.link }}" class="btn">
+          {% if snippets.5.link_title %}
+              {{ snippets.5.link_title }}
+          {% else %}
+              Learn more
+          {% endif %}
+        </a>
+        {% endif %}
+      </div>
+      <div class="feature">
+        {% if snippets.6.icon %}
+          <span class="icon {{ snippets.6.icon }}"></span>
+        {% endif %}
+        <h3>{{ snippets.6.title }}</h3>
+        <p>
+          {{ snippets.6.body }}
+        </p>
+        {% if snippets.6.link %}
+        <a href="{{ snippets.6.link }}" class="btn">
+          {% if snippets.6.link_title %}
+              {{ snippets.6.link_title }}
+          {% else %}
+              Learn more
+          {% endif %}
+        </a>
+        {% endif %}
+      </div>
+      <div class="feature">
+        {% if snippets.7.icon %}
+          <span class="icon {{ snippets.7.icon }}"></span>
+        {% endif %}
+        <h3>{{ snippets.7.title }}</h3>
+        <p>
+          {{ snippets.7.body }}
+        </p>
+        {% if snippets.7.link %}
+        <a href="{{ snippets.7.link }}" class="btn">
+          {% if snippets.7.link_title %}
+              {{ snippets.7.link_title }}
+          {% else %}
+              Learn more
+          {% endif %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  <script type="text/javascript">
+  var sliderImg = new Array();
+  {% for img in hero_image %}
+      sliderImg.push('{{ img.url }}')
+  {% endfor %}
+  </script>
+{% endblock %}

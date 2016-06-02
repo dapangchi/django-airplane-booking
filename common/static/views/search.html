@@ -1,0 +1,360 @@
+<style>
+.angular-google-map-container {
+position: absolute;
+top: 0px;
+bottom: 0px;
+right: 0px;
+left: 0px;
+}
+</style>
+<div class="tabs [[ class ]]" ng-init="initmap()">
+  <div class="navigation" ng-class="{fixed:boolChangeClass}">
+    <a href="#/quote" data-target="#charter-quote" ng-class="{'active': activeTab === 'quote'}" ng-click="switchTabTo('quote')">Charter quote</a>
+    <a href="#/empty" data-target="#empty-legs" ng-class="{'active': activeTab === 'empty'}" ng-click="switchTabTo('empty')">Empty legs</a>
+  </div>
+  <div id="charter-quote" class="tab" ng-class="{'show': activeTab === 'quote'}">
+    <div class="tab-container">
+      <form id="charter-quote-form" name="quoteForm" ng-submit="request(quoteForm.$valid)" novalidate>
+        <div class="row data clearfix" ng-class="{'custom additional': query.legs.length > 1}" ng-repeat="row in query.legs track by $index">
+          <p class="field horizontal custom" ng-show="query.legs.length > 1">
+            Leg [[ $index + 1 ]]
+          </p>
+          <p class="field horizontal medium">
+            <input type="text" name="from" ng-model="row.fromF" placeholder="From" class="autocomplete" data-index="[[ $index ]]"
+              data-target="from" ng-required="query.returnFlight && $index == 1 ? false : true" ng-disabled="query.returnFlight && $index == 1" ng-value="query.returnFlight === true && $index == 1 ? query.legs[$index-1].toF : ''" ui-autocomplete="airportOptions" />
+            <input type="hidden" ng-model="row.from" class="from" />
+          </p>
+
+          <p class="field horizontal medium">
+            <input type="text" name="to" ng-model="row.toF" placeholder="To" class="autocomplete" data-index="[[ $index ]]" data-target="to" ng-required="query.returnFlight && $index == 1 ? false : true" ng-disabled="query.returnFlight && $index == 1" ng-value="query.returnFlight === true && $index == 1 ? query.legs[$index-1].fromF : ''" ui-autocomplete="airportOptions" />
+            <input type="hidden" ng-model="row.to" class="to" />
+          </p>
+          <p class="field horizontal small">
+            <label>
+              <input type="text" name="DateOfBirth" ng-click="clickClander($index)" ui-min-date="03-03-2016" ng-model="row.date"  id="date-[[ $index ]]" placeholder="Date" class="datepicker"
+                data-date-format="dd-mm-yyyy"  ui-date="dateOptions[$index]" required />
+              <!-- <input type="text" name="DateOfBirth" ng-model="row.date" id="date-[[ $index ]]" placeholder="Date" class="datepicker"
+                ng-pattern="/(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/"
+                data-date-format="dd-mm-yyyy" ui-date="dateOptions" required /> -->
+              <span class="icon icon-calendar"></span>
+            </label>
+            <div role="alert">
+              <span class="error" ng-show="quoteForm.row.date.$error.required">Required!</span>
+              <span class="error" ng-show="quoteFrom.row.date.$error.date">Not a vaild date!</span>
+            </div>
+          </p>
+          <p class="field horizontal xsmall">
+            <input type="text" name="time" ng-model="row.time" autocomplete="off" class="timepicker" placeholder="HH:MM(24hrs)" mask="29:59" restrict="reject" required />
+          </p>
+          <p class="field horizontal xxsmall passenger" ng-mouseover="iconShow($index);" ng-mouseleave="iconHide($index);">
+            <input type="number" name="passangers" onkeypress="return event.charCode >= 48 && event.charCode <= 57" ng-model="row.passengers" class="timepicker" ng-pattern="/^\d+$/" placeholder="PAX" min="1" autocomplete="off" required />
+              <img class="up-icon" ng-show="row.mousein" ng-click="upPax($index);" src="/media/images/up.png">
+              <img class="down-icon" ng-show="row.mousein" ng-click="downPax($index);" src="/media/images/down.png">
+          </p>
+          <p class="field horizontal xmedium cta last" ng-show="$index == 0">
+            <button class="btn" ng-click="submitted=true">Request quotes</button>
+          </p>
+          <p class="field horizontal xmedium cta act last add-return" ng-show="query.legs.length > 1 && $index > 0">
+            <input ng-if="$index == 1" type="checkbox" ng-model="query.returnFlight" id="return-[[ $index ]]" ng-true-value="true" class="return-leg" />
+            <label ng-if="$index == 1" class="add-return-leg" for="return-[[ $index ]]" ng-click="returnFlight()">RETURN</label>
+            <a href="" class="icon icon-delete right remove-leg" ng-click="remove(row)"></a>
+          </p>
+        </div>
+        <div class="row clearfix last" ng-show="query.legs.length < 5 && query.returnFlight != true">
+          <a href="" class="add-return-leg add-row" ng-click="addRow()"><span class="icon icon-plus"></span>Add leg / return</a>
+        </div>
+        <div class="row clearfix last" ng-hide="query.legs.length > 5">
+        </div>
+      </form>
+    </div>
+    <h2 class="small" ng-if="url == '/get-a-quote/'">Airport finder</h2>
+    <div ng-if="url == '/get-a-quote/'" class="tab-container map">
+      <p class="lead small">
+        Enter an address to find airports nearest your destination, or simply enter an airport name
+      </p>
+      <div class="form">
+        <form id="airport-search" name="airportFinder" ng-submit="" novalidate>
+          <div class="row clearfix">
+            <p class="field horizontal large">
+              <!-- <input type="text" ng-model="aircraftSearch.city" placeholder="Street name and/or city" /> -->
+              <!-- <input type="text" name="" ng-model="aircraftSearch.city" placeholder="Street name and/or city" class="autocomplete"
+                data-target="city" ng-value="" ui-autocomplete="airportSearchByAddr" /> -->
+              <input id="txtAddress" class="text" ng-click="mapShow('address')" g-places-autocomplete ng-model="aircraftSearch.city" placeholder="Street name and/or city" class="autocomplete" />
+            </p>
+            <!-- <p class="field horizontal medium">
+              <span class="selectize-style">
+                <ui-select ng-model="aircraftSearch.country" theme="selectize">
+                  <ui-select-match placeholder="Choose country">[[ $select.selected.name ]]</ui-select-match>
+                  <ui-select-choices repeat="item.id as item in countries | filter: $select.search" refresh="refreshCountries($select.countries)" refresh-delay="0">
+                    [[ item.name ]]
+                  </ui-select-choices>
+                </ui-select>
+              </span>
+            </p> -->
+            <p class="field horizontal large">
+              <input id="txtAirport"  type="text" ng-click="mapShow('airport')" ng-model="aircraftSearch.searchString" placeholder="Airport name or code" class="autocomplete"
+                 data-target="airCode" ng-value="" ui-autocomplete="airportSearchByCode"/>
+            </p>
+            <!-- <p class="field horizontal large">
+              <button class="btn">Find airport</button>
+            </p> -->
+          </div>
+        </form>
+      </div>
+      <div class="map-holder" style="position:relative; height:600px;">
+        <ui-gmap-google-map ng-if="mapByAddress" center="map.center" zoom="map.zoom" options="options" bounds="map.bounds" control="addressMapControl" refresh="map" ng-cloak>
+          <ui-gmap-markers models="markers" coords="'self'" icon="'icon'" fit="'true'"
+            events="map.markersEvents">
+          <!-- <ui-gmap-marker ng-repeat="m in markers" coords="m.coords" icon="m.icon" idKey="m.id" fit="'true'"> -->
+            <ui-gmap-windows show="show">
+              <div>[[ mapInfo ]]</div>
+            </ui-gmap-windows>
+          </ui-gmap-markers>
+          <!--<ui-gmap-window coords="map.infoWindowWithCustomClass.coords" isIconVisibleOnClick="true" options="map.infoWindowWithCustomClass.options">-->
+          <ui-gmap-window coords="map.infoWindowWithCustomClass.coords" isIconVisibleOnClick="true" options="map.infoWindowWithCustomClass.options">
+            I'm a window with a custom class set via options.boxClass. I only work when googles
+            <a href ="//google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/docs/reference.html#InfoBoxOptions">infoBox plugin</a> is included.
+          </ui-gmap-window>
+        </ui-gmap-google-map>
+
+        <ui-gmap-google-map ng-if="mapByAirport" center="mapAirport.center" zoom="mapAirport.zoom" options="optionsAirport" bounds="mapAirport.bounds" control="airportMapControl" refresh="mapAirport" ng-cloak>
+          <ui-gmap-markers models="airportMarkers" coords="'self'" icon="icon" fit="'true'" dorebuildall="true" modelsbyref="false" events="mapAirport.markersEvents">
+          <!--<ui-gmap-marker ng-repeat="mark in airportMarkers" coords="mark.coords" icon="mark.icon" idKey="mark.id" fit="'true'">-->
+
+          </ui-gmap-markers>
+          <ui-gmap-window coords="mapAirport.infoWindowWithCustomClass.coords" isIconVisibleOnClick="true" options="mapAirport.infoWindowWithCustomClass.options">
+            I'm a window with a custom class set via options.boxClass. I only work when googles
+            <a href ="//google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/docs/reference.html#InfoBoxOptions">infoBox plugin</a> is included.
+          </ui-gmap-window>
+        </ui-gmap-google-map>
+      </div>
+    </div>
+  </div>
+
+  <div id="empty-legs" class="tab" ng-class="{'show': activeTab === 'empty'}">
+    <div class="tab-container">
+      <form id="empty-legs-form" name="emptyForm" ng-submit="emptySearch(emptyForm.$valid)" novalidate>
+        <div class="row clearfix">
+          <p class="field horizontal medium empty-legs">
+            <input type="text" name="from" id="from" placeholder="From" data-index="[[ $index ]]" data-target="airportFrom" ng-model="empty.airportFromF" ui-autocomplete="airportOptions" required />
+            <input type="hidden" ng-model="empty.airportFrom" class="from" />
+          </p>
+          <p class="field horizontal medium empty-legs">
+            <input type="text" name="to" id="to" placeholder="To"  data-index="[[ $index ]]" data-target="airportTo" ng-model="empty.airportToF" ui-autocomplete="airportOptions" required />
+            <input type="hidden" ng-model="empty.airportTo" class="to" />
+          </p>
+          <p class="field horizontal small empty-legs">
+
+            <label data-tip="If no date is entered, all flights for your selected itinerary will be listed.">
+              <input type="text" name="empty-leg-date" id="empty-leg-date" placeholder="Date" class="datepicker" ng-model="empty.flightStart" ui-date="dateOptions" data-tip="If no date is entered, all flights for your selected itinerary will be listed."/>
+              <span class="icon icon-calendar leg-start"></span>
+            </label>
+            <div id="tooltip-emptyLegStart">
+                <div class="tooltip-emptyLegStart">
+                    <div class="tooltip-header">Notice
+                        <a href="#" class="tooltip-close">X
+                            <span class="icon icon-delete"/>
+                        </a>
+                    </div>
+                    <div class="tooltip-comments">
+                        <div class="">If no date is entered, all flights for your selected itinerary will be listed.</div>
+                    </div>
+                </div>
+            </div>
+          </p>
+          <p class="field horizontal xmedium cta">
+            <button class="btn">Search flights</button>
+          </p>
+        </div>
+        <div class="row clearfix last">
+          <a href="" class="add-return-leg browse paragraph" ng-click="emptyLegSearch()" ng-if="home"><span class="icon icon-paragraph"></span>View full list of empty legs</a>
+          <a href="" class="add-return-leg browse" ng-click="clearSearch()" ng-if="!home && !cleared"><span class="icon icon-delete"></span>Clear search</a>
+        </div>
+      </form>
+    </div>
+    <h2 class="small" ng-show="emptyResults.count > 0">Available flights</h2>
+    <h2 class="small" ng-show="emptyResults.count == 0">No Available flights</h2>
+
+    <div class="empty-legs-wrapper">
+        <div class="tab-container no-padding empty-legs empty-legs-hide" ng-show="emptyResults.count > 0">
+          <p class="lead small">Showing [[ emptyResults.count ]] flights</p>
+          <div class="table-wrap">
+            <div class="table mobile">
+              <div class="row" ng-repeat="flight in emptyResults.legs">
+                <dl>
+                  <dt>From</dt>
+                  <dd>[[ flight.airportFromObj.airportName ]] ([[ flight.airportFromCode ]])<small>[[ flight.airportFromObj.city ]], [[ flight.airportFromObj.country ]]</small></dd>
+                  <dt>To</dt>
+                  <dd>[[ flight.airportToObj.airportName ]] ([[ flight.airportToCode ]]<small>[[ flight.airportToObj.city ]], [[ flight.airportToObj.country ]]</small></dd>
+                </dl>
+                <div class="extra">
+                  <dl>
+                    <dt>Time</dt>
+                    <dd>[[ flight.formattedFlightDate ]]</dd>
+                    <dt>Aircraft</dt>
+                    <dd>[[ flight.aircraftName ]]</dd>
+                    <dt>Capacity</dt>
+                    <dd>[[ flight.seats ]]</dd>
+                    <dt>Price</dt>
+                    <dd>[[ flight.operatorPrice ]]</dd>
+                  </dl>
+                  <div class="galleries">
+                    <div class="switch">
+                      <a href="#" class="icon icon-camera active" ng-if="(flight.aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }).length > 0" data-target=".gallery-container"></a>
+                      <a href="#" class="icon icon-seats" ng-if="(charter.offers[0].aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }).length > 0" data-target=".floorplan-container"></a>
+                    </div>
+                    <div class="images">
+                      <div class="gallery gallery-container show">
+                        <slick init-onload="true" data="flight.aircraft.imageIds" ng-if="(flight.aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }).length > 0">
+                          <div ng-repeat="image in flight.aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }">
+                            <img ng-src="http://ascentjet.com/rest/aircraft/images/[[ flight.aircraft.aircraftId ]]/[[ image.id ]]"  />
+                          </div>
+                        </slick>
+                      </div>
+                      <div class="gallery mobile-floorplan-container" ng-show="(flight.aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }).length > 0">
+                        <slick init-onload="true" data="flight.aircraft.imageIds">
+                          <div ng-repeat="image in flight.aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }">
+                            <img ng-src="http://ascentjet.com/rest/aircraft/images/[[ flight.aircraft.aircraftId ]]/[[ image.id ]]" width="430" height="150" />
+                          </div>
+                        </slick>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="#/empty" ng-show="flight.price" ng-click="emptyRequest(flight)" class="btn">Check availability</a>
+                  <a href="#/empty" ng-show="!flight.price" ng-click="emptyRequest(flight)" class="btn">Request quote</a>
+                </div>
+                <a href="" class="btn" ng-click="showDetailsMobile($event, $index)" data-details="Details" data-close="Close">Details</a>
+              </div>
+            </div>
+            <table class="empty-legs desktop">
+              <thead>
+                <tr>
+                  <th class="from">From</th>
+                  <th class="to">To</th>
+                  <th class="date">Date</th>
+                  <th class="aircraft">Aircraft</th>
+                  <th class="capacity">Capacity</th>
+                  <th class="price">Price</th>
+                  <th class="actions"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat-start="flight in emptyResults.legs">
+                  <td class="from">
+                    <div style="padding-right:20px;">
+                      <span class="start"></span>[[ flight.airportFromObj.airportName ]] ([[ flight.airportFromCode ]])<small>[[ flight.airportFromObj.city ]], [[ flight.airportFromObj.country ]]</small>
+                    </div>
+                  </td>
+                  <td class="to">[[ flight.airportToObj.airportName ]] ([[ flight.airportToCode ]])<small>[[ flight.airportToObj.city ]], [[ flight.airportToObj.country ]]</small></td>
+                  <td class="date">[[ flight.date ]]<small>Departs at: [[ flight.time ]]</small></td>
+                  <td class="aircraft"><span class="icon icon-plane-side"></span>[[ flight.aircraftName ]]</td>
+                  <td class="capacity">[[ flight.seats ]]</td>
+                  <td class="price">[[ flight.operatorPrice ]]</td>
+                  <td class="actions">
+                    <div style="padding-right:20px;">
+                      <div class="btn" ng-click="showDetails($event, $index)">Details</div>
+                      <div href="#" class="btn close" ng-click="showDetails($event, $index)">Close</div>
+                      <span class="end"></span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="details" ng-repeat-end>
+                  <td colspan="7">
+                    <div class="expander">
+                      <div class="switch">
+                        <a href="#" ng-if="(flight.aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }).length > 0" class="icon icon-camera active" data-target=".gallery-container"></a>
+                        <a href="#" class="icon icon-seats" data-target=".floorplan-container"></a>
+                      </div>
+                      <div class="images">
+                        <div class="gallery gallery-container show">
+                          <slick init-onload="true" data="flight.aircraft.imageIds" ng-if="(flight.aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }).length > 0">
+                            <div ng-repeat="image in flight.aircraft.imageIds | filter: { type: 'AIRCRAFT_IMAGE' }">
+                              <img ng-src="http://ascentjet.com/rest/aircraft/images/[[ flight.aircraft.aircraftId ]]/[[ image.id ]]" width="430" height="240" />
+                            </div>
+                          </slick>
+                        </div>
+                        <div class="gallery floorplan-container">
+                          <dl>
+                            <dt>Aircraft</dt>
+                            <dd>[[ flight.aircraft.type ]]</dd>
+                            <dt>Type</dt>
+                            <dd>[[ flight.aircraft.category ]]</dd>
+                            <dt>Seats</dt>
+                            <dd>[[ flight.aircraft.seats ]]</dd>
+                          </dl>
+                          <slick init-onload="false" data="flight.aircraft.imageIds" ng-show="(flight.aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }).length > 0">
+                            <div ng-repeat="image in flight.aircraft.imageIds | filter: { type: 'FLOOR_PLAN' }">
+                              <img ng-src="http://ascentjet.com/rest/aircraft/images/[[ flight.aircraft.aircraftId ]]/[[ image.id ]]" width="430" height="150" />
+                            </div>
+                          </slick>
+                        </div>
+                      </div>
+                      <div class="map" style="position:relative;" ng-if="flight.map.visible">
+                        <ui-gmap-google-map center="flight.map.center" zoom="flight.map.zoom" refresh="flight.map.visible" bounds="flight.map.bounds">
+                          <ui-gmap-markers models="flight.markers" coords="'self'" icon="'icon'" fit="'true'" options="flight.marker"></ui-gmap-markers>
+                          <ui-gmap-polyline path="flight.line.path" stroke="flight.line.stroke" visible='flight.line.visible' fit="false" geodesic="false"></ui-gmap-polyline>
+                        </ui-gmap-google-map>
+                      </div>
+                      <div class="details">
+                        <div class="row">
+                          <span class="icon icon-raise"></span>
+                          <div class="time">
+                            <span>Departure time</span>
+                            [[ flight.formattedFlightDate ]]
+                          </div>
+                        </div>
+                        <div class="row">
+                          <span class="icon icon-descending"></span>
+                          <div class="time">
+                            <span>Arrival time (aprox)</span>
+                            [[ flight.estimatedArrivalTime ]]
+                          </div>
+                        </div>
+                        <div class="row">
+                          <span class="icon icon-return"></span>
+                          <div class="time">
+                            <span>Flight duration (aprox)</span>
+                            [[ flight.flightTime ]]
+                          </div>
+                        </div>
+                        <a href="#/empty" ng-show="flight.price" ng-click="emptyRequest(flight)" class="btn">Check availability</a>
+                        <a href="#/empty" ng-show="!flight.price" ng-click="emptyRequest(flight)" class="btn">Request quote</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="pagination-wrapper">
+                <ul class="pagination">
+                    <li ng-class="{ disabled : pagination.current == 1 }">
+                        <a href="" ng-click="setCurrent(1)">&laquo;</a>
+                    </li>
+                    <li ng-class="{ disabled : pagination.current == 1 }">
+                        <a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a>
+                    </li>
+                    <input type="hidden" name="pageLength" value="[[ pages.length ]]">
+                    <li ng-repeat="pageNumber in pages" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+                        <a href="" ng-click="setCurrent(pageNumber)">[[ pageNumber ]]</a>
+                    </li>
+
+                    <li ng-class="{ disabled : pagination.current == pagination.last }">
+                        <a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a>
+                    </li>
+                    <li ng-class="{ disabled : pagination.current == pagination.last }">
+                        <a href="" ng-click="setCurrent(pagination.last)">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="back-to-top" scroll-to="top">
+              <span class="scroll icon icon-up"></span><span>Back to top</span>
+            </div>
+          </div>
+          <div class="last-skew white"></div>
+        </div>
+        <div class="wait" ng-show="wait"><img src="/media/images/wait.gif" /></div>
+      </div>
+  </div>
+</div>

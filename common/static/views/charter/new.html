@@ -1,0 +1,128 @@
+<div class="details-content">
+  <form class="updateQuote" ng-class="{'ng-submitted' : submitted}" name="updateQuote" novalidate>
+    <h2>Charter quote request
+      <span class="selectize-style">
+        <ui-select ng-model="priceSwitch" theme="selectize" on-select="changePrice($item, $model)">
+          <ui-select-match>[[ $select.selected.name ]]</ui-select-match>
+          <ui-select-choices repeat="pr.code as pr in priceDrop track by pr.code">
+            [[ pr.name ]]
+          </ui-select-choices>
+        </ui-select>
+      </span>
+    </h2>
+    <div class="row">
+      <div class="side">
+        <div class="icon icon-plane main"></div>
+        <h3 class="active">Flight details <span class="icon icon-check"></span></h3>
+      </div>
+      <div class="list">
+        <h3 ng-show="charter.legs.length == 1 && charter.returnFlight == false">One way flight<span class="icon icon-single-leg"></span></h3>
+        <h3 ng-show="charter.legs.length > 1 && charter.returnFlight == false">Multi leg flight <span class="icon icon-multi-leg"></span></h3>
+        <h3 ng-show="charter.returnFlight == true">Return flight <span class="icon icon-return-leg"></span></h3>
+        <div class="flight" ng-repeat="leg in charter.legs">
+          <h4>[[ leg.fromAirportObj.city ]] <span ng-hide="leg.fromAirportObj.iataCode.trim() ==''">([[ leg.fromAirportObj.iataCode ]])</span> - [[ leg.toAirportObj.city ]] <span ng-hide="leg.toAirportObj.iataCode.trim() ==''">([[ leg.toAirportObj.iataCode ]])</span></h4>
+          <ul>
+            <li>
+              <span class="label">Date / Time</span>
+              <span class="value">[[ leg.date ]] / [[ leg.time ]]</span>
+            </li>
+            <li>
+              <span class="label">Passengers</span>
+              <span class="value">[[ leg.passengers ]]</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="side">
+        <div class="icon icon-plane-top main top"></div>
+        <h3 ng-class="{'active': additional.selectedCategories && additional.selectedCategories.length > 0}">Select aircraft <span class="icon icon-check"></span></h3>
+      </div>
+      <div class="list">
+        <ul class="checkboxes">
+          <li ng-repeat="category in categories">
+            <label>
+              <div class="wrap">
+                <input type="checkbox" name="aircraft" checklist-model="additional.selectedCategories" checklist-value="category.id" id="plane-[[ $index ]]" ng-required="!additional.selectedCategories.length > 0"><label for="plane-[[ $index ]]">[[ category.name ]]</label>
+              </div>
+              <span ng-repeat="(label, price) in category.prices" ng-show="label == priceSwitch">from [[ label ]] [[ price ]]</span>
+            </label>
+            <div class="extra" ng-show="category.flightTime">
+              See flight times
+            </div>
+            <div class="flight-times" ng-repeat="flight in category.requestLegsFlightTime">
+              [[ flight.fromAirportObj.city ]]
+              <span ng-hide="flight.fromAirportObj.iataCode.trim() == ''"> ([[ flight.fromAirportObj.iataCode ]])</span> - 
+              [[ flight.toAirportObj.city ]] 
+              <span ng-hide="flight.toAirportObj.iataCode.trim() == ''"> ([[ flight.toAirportObj.iataCode ]])</span> 
+              [[ flight.flightTime ]]
+            </div>
+          </li>
+        </ul>
+        <div ng-show="submitted && updateQuote.aircraft.$invalid" class="alert alert-danger error-message">
+          <div ng-show="updateQuote.aircraft.$error.required">
+            <br>
+            * This field is required!
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="side">
+        <div class="icon icon-baggage main baggage"></div>
+        <h3 ng-class="{'active': additional.baggageType || additional.additionalInfo}">Additional <br />Requirements <span class="icon icon-check"></span></h3>
+      </div>
+      <div class="list">
+        <div class="column">
+          <label for="baggage">Baggage</label>
+          <span class="selectize-style">
+            <ui-select id="baggage" name="baggageId" ng-model="additional.baggageType" theme="selectize" required>
+              <ui-select-match placeholder="Select baggage requirement">[[ $select.selected.name ]]</ui-select-match>
+              <ui-select-choices repeat="bag.id as bag in baggage track by bag.code">
+                [[ bag.name ]]
+              </ui-select-choices>
+            </ui-select>
+            <div ng-show="submitted && updateQuote.baggageId.$invalid" class="alert alert-danger error-message">
+              <div ng-show="updateQuote.baggageId.$error.required">
+                <br>
+                * This field is required!
+              </div>
+            </div>
+          </span>
+        </div>
+        <div class="column last">
+          <label for="additional-requirements">Additional requirements
+          <div class="popup tooltip right">
+            <a href ng-click="showTooltip()" class="icon icon-info right"></a>
+            <div class="tooltip-container" ng-show="tooltipShown">
+              <div class="tooltip-close">
+                <a href ng-click="hideTooltip()"><span>Close </span> <span class="icon icon-close"></span></a>
+              </div>
+              <div class="tooltip-content">
+                Use this area to enter any information you would like us to take into account while selecting and offering you aircraft for your trip.
+                This can include special catering requests, ground transportation or specific type of aircraft you would like to fly in.
+                You can even specify your favorite operator and aircraft if you have a particular preference, and we will see what's available.
+                If you require overnight stays or a multi-leg flight, it's a whole lot easier to tell us here.
+                This information will be passed on to the respective operators who will be solicited for your flight(s) and comprehensive offers will be sent to you.
+                <br><br>
+                Please remember that you can always call our support team on +41(22) 366 42 05 at any time if personalized assistance is required.</div>
+            </div>
+          </div>
+          </label>
+          <textarea name="additional" ng-model="additional.additionalInfo" rows="8" cols="40" id="additional-requirements"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row last">
+      <div class="info">
+        <p>
+          All starting prices shown are estimates. These are based on average hourly rates as applied in the European community and are updated on a regular basis. The prices shown correspond to a return flight to the selected destination. For overnight stays, trips requiring two flight rotations or multiple leg trips, pricing will be sent directly to your log in area by selected operators.
+        </p>
+      </div>
+      <a href="#/charter/[[charter.id]]" class="btn" ng-click="submit(updateQuote.$valid); submitted=true" ng-show="signed == 'true'">Request quote</a>
+      <a href="#/charter/[[charter.id]]" class="btn" ng-click="loginPopup('phone'); submitted=true" ng-show="signed != 'true'">Request quote</a>
+    </div>
+  </form>
+  <div class="last-skew white"></div>
+</div>

@@ -1,0 +1,16 @@
+{% extends "preview/structure/base.html" %}
+{% block content %}
+  <section class="image intro first login bottom-dark-gray" style="background-image:url('/media/static/images/login.jpg');">
+    <div class="container" ng-controller="LogoutController">
+      <div class="intro">
+        <h2>Join Ascent Jet <br>Marketplace</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a egestas nisi. Integer eget metus eget tortor interdum aliquet. Sed aliquet orci non ligula porttitor fermentum. Nam nec tincidunt leo.
+        </p>
+      </div>
+      <div class="login">
+        <div ng-controller="AccountController" ng-include="'/media/static/views/account/new.html'"></div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
