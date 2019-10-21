@@ -47,7 +47,7 @@ djangorestframework==3.1.1
 djangorestframework-xml==1.0.1
 dnspython==1.11.1
 duplicity==0.6.23
-ecdsa==0.13
+ecdsa==0.13.3
 etcd==2.0.8
 ExtensionClass==4.1a1
 Fabric==1.10.1
