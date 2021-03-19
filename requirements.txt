@@ -61,7 +61,7 @@ gunicorn==19.1.1
 gyp==0.1
 httplib2==0.8
 itsdangerous==0.24
-Jinja2==2.7.3
+Jinja2==2.11.3
 kombu==3.0.26
 libsass==0.8.2
 lockfile==0.8
