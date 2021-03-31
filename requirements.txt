@@ -65,7 +65,7 @@ Jinja2==2.7.3
 kombu==3.0.26
 libsass==0.8.2
 lockfile==0.8
-lxml==3.3.3
+lxml==4.6.3
 mapreduce==0.3.5
 Markdown==2.6.2
 MarkupSafe==0.23
