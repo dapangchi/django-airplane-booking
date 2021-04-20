@@ -136,6 +136,6 @@ virtualenv==13.0.3
 virtualenv-clone==0.2.5
 virtualenvwrapper==4.6.0
 websocket-client==0.12.0
-Werkzeug==0.9.6
+Werkzeug==0.15.3
 xdiagnose===3.6.3build2
 zope.interface==4.0.5
