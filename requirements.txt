@@ -14,7 +14,7 @@ defer==1.0.6
 defusedxml==0.4.1
 dirspec==13.10
 dj-database-url==0.3.0
-Django==1.8.1
+Django==2.2.24
 django-allauth==0.19.1
 django-annoying==0.8.1
 django-appconf==1.0.1
