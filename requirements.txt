@@ -4,7 +4,7 @@ anyjson==0.3.3
 apt-xapian-index==0.45
 beautifulsoup4==4.3.2
 billiard==3.3.0.20
-celery==3.1.18
+celery==5.2.2
 chardet==2.0.1
 command-not-found==0.3
 Cython==0.20.1
